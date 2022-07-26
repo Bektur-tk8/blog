@@ -1,7 +1,8 @@
 
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from blog.forms import TagForm, PostForm
-from blog.utils import ObjectDetailMixin, ObjectCreateMixin
+from blog.utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin
 
 from blog.models import Post, Tag
 from django.views.generic import View
@@ -67,21 +68,58 @@ class TagCreate(ObjectCreateMixin, View):
     #         return redirect(new_tag)
     #     return render(request, 'blog/tag_create.html', {'form': bound_form})
 
-class TagUpdate(View):
+class TagUpdate(ObjectUpdateMixin, View):
+    model = Tag
+    form_model = TagForm
+    template = 'blog/tag_update.html'
+
+
+    # def get(self, request, slug):
+    #     tag = Tag.objects.get(slug__iexact=slug)
+    #     bound_form = TagForm(instance=tag)
+    #     return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
+
+    # def post(self, request, slug):
+    #     tag = Tag.objects.get(slug__iexact = slug)
+    #     bound_form = TagForm(request.POST, instance=tag)
+
+    #     if bound_form.is_valid():
+    #         updated_tag = bound_form.save()
+    #         return redirect(updated_tag)
+    #     return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
+
+class TagDelete(View):
     def get(self, request, slug):
         tag = Tag.objects.get(slug__iexact=slug)
-        bound_form = TagForm(instance=tag)
-        return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
+        return render(request, 'blog/tag_delete.html', {'tag': tag})
 
     def post(self, request, slug):
-        tag = Tag.objects.get(slug__iexact = slug)
-        bound_form = TagForm(request.POST, instance=tag)
+        tag = Tag.objects.get(slug__iexact=slug)
+        tag.delete()
+        return redirect(reverse('tags_list_url'))
 
-        if bound_form.is_valid():
-            updated_tag = bound_form.save()
-            return redirect(updated_tag)
-        return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
 
+
+class PostUpdate(ObjectUpdateMixin, View):
+
+    model = Post
+    form_model = PostForm
+    template = 'blog/post_update.html'
+
+
+    # def get(self, request, slug):
+    #     post = Post.objects.get(slug__iexact=slug)
+    #     bound_form = PostForm(instance=post)
+    #     return render(request, 'blog/post_update.html', {'form': bound_form, 'post': post})
+
+    # def post(self, request, slug):
+    #     post = Post.objects.get(slug__iexact = slug)
+    #     bound_form = TagForm(request.POST, instance=post)
+
+    #     if bound_form.is_valid():
+    #         updated_post = bound_form.save()
+    #         return redirect(updated_post)
+    #     return render(request, 'blog/post_update.html', {'form': bound_form, 'post': post})
 
 
 class PostCreate(View):
