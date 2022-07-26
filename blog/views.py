@@ -67,6 +67,21 @@ class TagCreate(ObjectCreateMixin, View):
     #         return redirect(new_tag)
     #     return render(request, 'blog/tag_create.html', {'form': bound_form})
 
+class TagUpdate(View):
+    def get(self, request, slug):
+        tag = Tag.objects.get(slug__iexact=slug)
+        bound_form = TagForm(instance=tag)
+        return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
+
+    def post(self, request, slug):
+        tag = Tag.objects.get(slug__iexact = slug)
+        bound_form = TagForm(request.POST, instance=tag)
+
+        if bound_form.is_valid():
+            updated_tag = bound_form.save()
+            return redirect(updated_tag)
+        return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
+
 
 
 class PostCreate(View):

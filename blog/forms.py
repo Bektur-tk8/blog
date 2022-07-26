@@ -4,13 +4,14 @@ from django.core.exceptions import ValidationError
 
 class TagForm(forms.ModelForm):
 
-    model = Tag
-    fields = ['title', 'slug']
+    class Meta:
+        model = Tag
+        fields = ['title', 'slug']
 
-    widgets = {
-        'title': forms.Textinput(attrs = {'class': 'form-control'}),
-        'slug': forms.Textinput(attrs = {'class': 'form-control'})
-    }
+        widgets = {
+            'title': forms.TextInput(attrs = {'class': 'form-control'}),
+            'slug': forms.TextInput(attrs = {'class': 'form-control'})
+        }
     # title = forms.CharField(max_length=50)
     # slug = forms.CharField(max_length=50)
 
