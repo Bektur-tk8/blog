@@ -2,7 +2,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from blog.forms import TagForm, PostForm
-from blog.utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin
+from blog.utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, ObjectDeleteMixin
 
 from blog.models import Post, Tag
 from django.views.generic import View
@@ -88,17 +88,27 @@ class TagUpdate(ObjectUpdateMixin, View):
     #         return redirect(updated_tag)
     #     return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
 
-class TagDelete(View):
-    def get(self, request, slug):
-        tag = Tag.objects.get(slug__iexact=slug)
-        return render(request, 'blog/tag_delete.html', {'tag': tag})
+class TagDelete(ObjectDeleteMixin, View):
 
-    def post(self, request, slug):
-        tag = Tag.objects.get(slug__iexact=slug)
-        tag.delete()
-        return redirect(reverse('tags_list_url'))
+    model = Tag
+    template = 'blog/tag_delete.html'
+    redirect_url = 'tags_list_url'
+    # def get(self, request, slug):
+    #     tag = Tag.objects.get(slug__iexact=slug)
+    #     return render(request, 'blog/tag_delete.html', {'tag': tag})
+
+    # def post(self, request, slug):
+    #     tag = Tag.objects.get(slug__iexact=slug)
+    #     tag.delete()
+    #     return redirect(reverse('tags_list_url'))
 
 
+
+class PostDelete(ObjectDeleteMixin, View):
+
+    model = Post
+    template = 'blog/post_delete.html'
+    redirect_url = 'posts_list_url' 
 
 class PostUpdate(ObjectUpdateMixin, View):
 
