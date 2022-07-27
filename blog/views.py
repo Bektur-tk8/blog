@@ -132,8 +132,8 @@ class PostUpdate(ObjectUpdateMixin, View):
     #     return render(request, 'blog/post_update.html', {'form': bound_form, 'post': post})
 
 
-class PostCreate(View):
-    form_model = TagForm
+class PostCreate(ObjectCreateMixin, View):
+    form_model = PostForm
     template = 'blog/post_create.html'
 
 
