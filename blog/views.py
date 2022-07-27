@@ -7,6 +7,8 @@ from blog.utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, 
 from blog.models import Post, Tag
 from django.views.generic import View
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
 def posts_list(request):
     posts = Post.objects.all()
@@ -51,9 +53,10 @@ def tags_list(request):
     return render(request, 'blog/tags_list.html', {'tags': tags})
 
 
-class TagCreate(ObjectCreateMixin, View):
+class TagCreate(LoginRequiredMixin, ObjectCreateMixin, View):
     form_model = TagForm
     template = 'blog/tag_create.html'
+    raise_exception =True
 
 
     # def get(self, request):
@@ -68,10 +71,11 @@ class TagCreate(ObjectCreateMixin, View):
     #         return redirect(new_tag)
     #     return render(request, 'blog/tag_create.html', {'form': bound_form})
 
-class TagUpdate(ObjectUpdateMixin, View):
+class TagUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
     model = Tag
     form_model = TagForm
     template = 'blog/tag_update.html'
+    raise_exception =True
 
 
     # def get(self, request, slug):
@@ -88,11 +92,12 @@ class TagUpdate(ObjectUpdateMixin, View):
     #         return redirect(updated_tag)
     #     return render(request, 'blog/tag_update.html', {'form': bound_form, 'tag': tag})
 
-class TagDelete(ObjectDeleteMixin, View):
+class TagDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
 
     model = Tag
     template = 'blog/tag_delete.html'
     redirect_url = 'tags_list_url'
+    raise_exception =True
     # def get(self, request, slug):
     #     tag = Tag.objects.get(slug__iexact=slug)
     #     return render(request, 'blog/tag_delete.html', {'tag': tag})
@@ -104,17 +109,19 @@ class TagDelete(ObjectDeleteMixin, View):
 
 
 
-class PostDelete(ObjectDeleteMixin, View):
+class PostDelete(LoginRequiredMixin, ObjectDeleteMixin, View):
 
     model = Post
     template = 'blog/post_delete.html'
     redirect_url = 'posts_list_url' 
+    raise_exception =True
 
-class PostUpdate(ObjectUpdateMixin, View):
+class PostUpdate(LoginRequiredMixin, ObjectUpdateMixin, View):
 
     model = Post
     form_model = PostForm
     template = 'blog/post_update.html'
+    raise_exception =True
 
 
     # def get(self, request, slug):
@@ -132,9 +139,10 @@ class PostUpdate(ObjectUpdateMixin, View):
     #     return render(request, 'blog/post_update.html', {'form': bound_form, 'post': post})
 
 
-class PostCreate(ObjectCreateMixin, View):
+class PostCreate(LoginRequiredMixin, ObjectCreateMixin, View):
     form_model = PostForm
     template = 'blog/post_create.html'
+    raise_exception =True
 
 
     # def get(self, request):
